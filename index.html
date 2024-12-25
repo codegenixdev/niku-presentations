@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نقشه راه نرم‌افزار مدیریت نذورات</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "IRANSansX";
+        src: url("fonts/IRANSansXV.woff2") format("woff2"),
+          url("fonts/IRANSansXV.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      body {
+        font-family: "IRANSansX", Tahoma, sans-serif;
+        background: linear-gradient(135deg, #f6f9fc 0%, #eef3f7 100%);
+        min-height: 100vh;
+      }
+
+      .banner {
+        background: linear-gradient(
+          135deg,
+          #1a237e 0%,
+          #0d47a1 50%,
+          #01579b 100%
+        );
+        color: white;
+        padding: 80px 0;
+        margin-bottom: 50px;
+        border-radius: 0 0 60px 60px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .banner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="white" stroke-width="2" fill="none" opacity="0.1"/></svg>')
+          repeat;
+        opacity: 0.1;
+      }
+
+      .banner-content {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .banner h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        animation: fadeInUp 1s ease;
+      }
+
+      .banner .lead {
+        font-size: 1.5rem;
+        opacity: 0.9;
+        animation: fadeInUp 1s ease 0.3s both;
+      }
+
+      .phase-card {
+        border-radius: 20px;
+        margin-bottom: 40px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        background: white;
+        border: none;
+        overflow: hidden;
+      }
+
+      .phase-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .status-badge {
+        border-radius: 30px;
+        padding: 8px 20px;
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 500;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .phase-header {
+        background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+        color: white;
+        border-radius: 20px 20px 0 0;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .feature-item {
+        padding: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .feature-item:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        transform: translateX(-5px);
+      }
+
+      .feature-title {
+        color: #1a237e;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .feature-title i {
+        background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.2rem;
+      }
+
+      .icon-circle {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .phase-card:hover .icon-circle {
+        transform: rotate(360deg);
+      }
+
+      .status-ready {
+        background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+      }
+
+      .status-in-progress {
+        background: linear-gradient(135deg, #fb8c00 0%, #ef6c00 100%);
+      }
+
+      .status-planned {
+        background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+      }
+
+      ul {
+        list-style-type: none;
+        padding-right: 0;
+      }
+
+      ul li {
+        position: relative;
+        padding: 8px 25px 8px 0;
+      }
+
+      ul li::before {
+        content: "•";
+        color: #1a237e;
+        font-weight: bold;
+        position: absolute;
+        right: 0;
+      }
+
+      ul ul li::before {
+        content: "◦";
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      .phase-card {
+        /* animation: float 0.3s ease-in-out infinite; */
+      }
+
+      .phase-card:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .phase-card:nth-child(2) {
+        animation-delay: 2s;
+      }
+      .phase-card:nth-child(3) {
+        animation-delay: 4s;
+      }
+
+      .progress-indicator {
+        height: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        margin-top: 15px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.5);
+        transition: width 1s ease;
+      }
+
+      .feature-count {
+        background: rgba(26, 35, 126, 0.1);
+        color: #1a237e;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        margin-right: 10px;
+      }
+
+      .status-badge:hover {
+        transform: scale(1.1);
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #1a237e;
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0d47a1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Banner -->
+    <div class="banner">
+      <div class="banner-content">
+        <h1>
+          <i class="fas fa-mosque"></i>
+          نقشه راه نرم‌افزار مدیریت نذورات حرم حضرت معصومه (س)
+        </h1>
+        <p class="lead">سیستم جامع مدیریت نذورات و هدایا</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- فاز 1: آماده تحویل -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <div>
+            <span class="icon-circle"><i class="fas fa-check"></i></span>
+            <h2 class="d-inline">فاز ۱: آماده تحویل</h2>
+          </div>
+          <span class="status-badge status-ready">تکمیل شده</span>
+        </div>
+        <div class="card-body">
+          <!-- رابط کاربری -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-desktop"></i> رابط کاربری
+            </h5>
+            <ul>
+              <li>رابط کاربری ساده</li>
+              <li>چند زبانه</li>
+              <li>ساختار درختی صفحات و دسترسی آسان</li>
+            </ul>
+          </div>
+
+          <!-- مدیریت کاربران -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-users"></i> مدیریت کاربران و دسترسی‌ها
+            </h5>
+            <ul>
+              <li>سطح دسترسی داینامیک</li>
+              <li>
+                مدیریت پروفایل کاربران:
+                <ul>
+                  <li>اطلاعات شخصی و سازمانی</li>
+                  <li>تاریخچه فعالیت‌ها</li>
+                  <li>مدیریت دسترسی‌ها</li>
+                  <li>ثبت کاربر جدید توسط ادمین</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- مدیریت شعب -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-building"></i> مدیریت شعب (دفاتر) هدایا و نذورات
+            </h5>
+            <ul>
+              <li>
+                تعریف شعبه:
+                <ul>
+                  <li>نام و کد شعبه</li>
+                  <li>موقعیت مکانی</li>
+                  <li>شماره تماس</li>
+                  <li>ساعات کاری</li>
+                  <li>تخصیص متصدی به شعبه</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- مدیریت نذورات -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-gift"></i> مدیریت نذورات
+            </h5>
+            <ul>
+              <li>
+                نذورات نقدی:
+                <ul>
+                  <li>اسکناس</li>
+                  <li>کارت‌خوان (درگاه‌های مختلف)</li>
+                  <li>ثبت شماره پیگیری تراکنش‌ها</li>
+                  <li>تعریف روش های پرداخت</li>
+                </ul>
+              </li>
+              <li>
+                نذورات ارزی:
+                <ul>
+                  <li>انواع ارز</li>
+                  <li>ثبت تعداد و مشخصات</li>
+                </ul>
+              </li>
+              <li>
+                طلا و جواهرات:
+                <ul>
+                  <li>ثبت وزن و عیار</li>
+                </ul>
+              </li>
+              <li>
+                نذورات غیرنقدی:
+                <ul>
+                  <li>ثبت مشخصات و تعداد</li>
+                  <li>تعیین واحد شمارش</li>
+                  <li>ارزش‌گذاری کالاها</li>
+                </ul>
+              </li>
+              <li>
+                نذورات دام و احشام:
+                <ul>
+                  <li>ثبت نوع و مشخصات دام</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- سیستم گزارش‌گیری -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-chart-bar"></i> سیستم گزارش‌گیری
+            </h5>
+            <ul>
+              <li>
+                گزارشات مالی:
+                <ul>
+                  <li>درآمد کل</li>
+                  <li>گزارش دوره‌ای (روزانه/هفتگی/ماهانه)</li>
+                  <li>مقایسه دوره‌ها</li>
+                </ul>
+              </li>
+              <li>
+                گزارشات عملکردی:
+                <ul>
+                  <li>عملکرد دفاتر</li>
+                  <li>عملکرد متصدیان</li>
+                  <li>آمار مراجعین</li>
+                </ul>
+              </li>
+              <li>
+                گزارشات تحلیلی:
+                <ul>
+                  <li>نمودارهای آماری</li>
+                  <li>تحلیل روند</li>
+                </ul>
+              </li>
+              <li>
+                قابلیت‌های گزارش‌گیری:
+                <ul>
+                  <li>فیلترهای پیشرفته</li>
+                  <li>مرتب‌سازی</li>
+                  <li>خروجی Excel</li>
+                  <li>نمودارهای تعاملی</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- مدیریت مالی -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-money-bill"></i> مدیریت مالی
+            </h5>
+            <ul>
+              <li>
+                حساب‌های بانکی:
+                <ul>
+                  <li>تعریف حساب‌ها</li>
+                  <li>ثبت تراکنش‌ها</li>
+                  <li>گزارشات مالی</li>
+                </ul>
+              </li>
+              <li>
+                ارزش‌گذاری:
+                <ul>
+                  <li>قیمت‌گذاری کالاها</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- فاز 2: نیاز به توسعه -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <div>
+            <span class="icon-circle"><i class="fas fa-cogs"></i></span>
+            <h2 class="d-inline">فاز ۲: نیاز به توسعه</h2>
+          </div>
+          <span class="status-badge status-in-progress">در حال توسعه</span>
+        </div>
+        <div class="card-body">
+          <!-- رابط کاربری -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-mobile-alt"></i> رابط کاربری
+            </h5>
+            <ul>
+              <li>ریسپانسیو</li>
+            </ul>
+          </div>
+
+          <!-- تعریف شعبه -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-store"></i> تعریف شعبه
+            </h5>
+            <ul>
+              <li>ظرفیت متصدی</li>
+              <li>محدودیت جنسیتی</li>
+              <li>نوع شعبه (ثابت/سیار)</li>
+            </ul>
+          </div>
+
+          <!-- مدیریت نذورات -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-hand-holding-heart"></i> مدیریت نذورات
+            </h5>
+            <ul>
+              <li>پرداخت آنلاین نذورات</li>
+              <li>ثبت مشخصات فنی طلا و جواهرات</li>
+              <li>محاسبه ارزش ریالی</li>
+              <li>مدیریت نیت ها</li>
+              <li>اعتبارسنجی و تایید تمامی رکوردها توسط ادمین</li>
+            </ul>
+          </div>
+
+          <!-- امنیت و نظارت -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-shield-alt"></i> امنیت و نظارت
+            </h5>
+            <ul>
+              <li>احراز هویت دو مرحله‌ای</li>
+              <li>محدودیت IP</li>
+            </ul>
+          </div>
+
+          <!-- ارزش‌گذاری -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-calculator"></i> ارزش‌گذاری
+            </h5>
+            <ul>
+              <li>نرخ ارز و طلا</li>
+              <li>محاسبه ارزش کل موجودی</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- فاز 3: نیاز به پیاده‌سازی -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <div>
+            <span class="icon-circle"><i class="fas fa-tasks"></i></span>
+            <h2 class="d-inline">فاز ۳: نیاز به پیاده‌سازی</h2>
+          </div>
+          <span class="status-badge status-planned">برنامه‌ریزی شده</span>
+        </div>
+        <div class="card-body">
+          <!-- مدیریت شیفت‌ها -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-clock"></i> مدیریت شیفت‌ها
+            </h5>
+            <ul>
+              <li>ثبت ورود و خروج</li>
+              <li>گزارش تردد</li>
+              <li>محاسبه ساعات کاری</li>
+              <li>ثبت خروج دستی متصدی توسط مدیر</li>
+              <li>تایید نذورات توسط مدیر</li>
+            </ul>
+          </div>
+
+          <!-- مدیریت هدایای تبرکی -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-box-open"></i> مدیریت هدایای تبرکی
+            </h5>
+            <ul>
+              <li>
+                تعریف هدایا:
+                <ul>
+                  <li>نوع هدیه</li>
+                  <li>موجودی</li>
+                  <li>قیمت تمام شده</li>
+                </ul>
+              </li>
+              <li>
+                مدیریت موجودی:
+                <ul>
+                  <li>تخصیص به شعب</li>
+                  <li>ثبت رکورد جدید</li>
+                  <li>گزارش</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- انبارداری -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-warehouse"></i> انبارداری
+            </h5>
+            <ul>
+              <li>
+                مدیریت انبار:
+                <ul>
+                  <li>ثبت ورود و خروج کالا</li>
+                  <li>کنترل موجودی</li>
+                  <li>مدیریت انبارگردانی</li>
+                  <li>گزارشات انبار</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- یکپارچه‌سازی -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-link"></i> یکپارچه‌سازی
+            </h5>
+            <ul>
+              <li>
+                اتصال به سیستم‌های داخلی حرم:
+                <ul>
+                  <li>سیستم مالی</li>
+                  <li>سیستم انبار</li>
+                  <li>سیستم اداری</li>
+                  <li>سیستم مهمانسرا</li>
+                </ul>
+              </li>
+              <li>
+                وبسایت:
+                <ul>
+                  <li>ادغام وبسایت های فروشگاهی و اپ جامع</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- پشتیبانی و راهنما -->
+          <div class="feature-item">
+            <h5 class="feature-title">
+              <i class="fas fa-headset"></i> پشتیبانی و راهنما
+            </h5>
+            <ul>
+              <li>
+                سیستم تیکتینگ:
+                <ul>
+                  <li>ثبت درخواست</li>
+                  <li>پیگیری</li>
+                  <li>پاسخگویی</li>
+                  <li>آرشیو تیکت‌ها</li>
+                </ul>
+              </li>
+              <li>
+                راهنمای کاربری:
+                <ul>
+                  <li>مستندات</li>
+                  <li>فیلم‌های آموزشی</li>
+                  <li>پرسش‌های متداول</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
