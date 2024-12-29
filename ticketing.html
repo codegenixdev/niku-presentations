@@ -1,696 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>Integrating Ticketing into the Total Solution</title>
+    <title>سیستم جامع بلیت‌دهی</title>
     <style>
+      @font-face {
+        font-family: "IRANSansX";
+        src: url("fonts/IRANSansXV.woff2") format("woff2"),
+          url("fonts/IRANSansXV.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
       body {
-        font-family: Arial, sans-serif;
+        font-family: "IRANSansX", Tahoma, sans-serif;
         line-height: 1.6;
-        margin: 20px;
-        max-width: 1200px;
+        margin: 40px;
+        background-color: #f5f5f5;
       }
-      h1,
-      h2,
-      h3,
-      h4 {
-        color: #2e3a59;
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
-      h1 {
-        text-align: center;
+      .phase {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
       }
-      h2 {
-        border-bottom: 2px solid #2e3a59;
-        padding-bottom: 5px;
+      .phase-title {
+        color: #2196f3;
+        border-bottom: 2px solid #2196f3;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
       }
-      code {
-        background-color: #f4f4f4;
-        padding: 2px 4px;
-        font-family: Consolas, monospace;
-        font-size: 0.95em;
+      .feature-list {
+        padding-right: 20px;
       }
-      pre {
-        background-color: #f4f4f4;
-        padding: 10px;
-        overflow: auto;
+      .feature-item {
+        margin-bottom: 10px;
       }
-      ul {
-        margin-left: 20px;
+      .status {
+        font-size: 0.8em;
+        padding: 2px 6px;
+        border-radius: 3px;
+        margin-right: 5px;
       }
-      .note {
-        background-color: #fffbcc;
-        padding: 10px;
-        border-left: 4px solid #ffd324;
-        margin: 20px 0;
+      .exists {
+        background-color: #4caf50;
+        color: white;
+      }
+      .new {
+        background-color: #ff9800;
+        color: white;
       }
     </style>
   </head>
   <body>
-    <h1>Integrating Ticketing into the Total Solution</h1>
+    <div class="container">
+      <h1>سیستم جامع بلیت‌دهی</h1>
 
-    <p>
-      <strong>Objective:</strong> Identify the missing components in the current
-      Total Solution (TS) to support ticketing, provide suggestions, and outline
-      how to add ticket configuration with new ticket functionality.
-    </p>
-
-    <hr />
-
-    <h2>Missing Features in the Current TS for Ticketing</h2>
-
-    <p>
-      After reviewing the provided TS data structure and comparing it with the
-      required features of a comprehensive ticketing system, the following key
-      components are missing or need enhancement:
-    </p>
-
-    <ol>
-      <li>
-        <h3>Event Management</h3>
-        <ul>
-          <li>
-            <strong>Event Entity:</strong> There's no explicit entity
-            representing events, which is fundamental for ticketing systems.
+      <div class="phase">
+        <h2 class="phase-title">فاز اول: تعریف موارد پایه</h2>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="status exists">موجود</span>
+            ایجاد کسب و کار
           </li>
-          <li>
-            <strong>Event Properties:</strong> Support for event types (single,
-            series), date ranges, location details, timezones, and languages.
+          <li class="feature-item">
+            <span class="status exists">موجود</span>
+            ایجاد شعبه
           </li>
-        </ul>
-      </li>
-      <li>
-        <h3>Ticket Entity</h3>
-        <ul>
-          <li>
-            <strong>Specialized Ticket Properties:</strong> While the
-            <code>products</code> array exists, tickets often require specific
-            attributes such as validity periods, seat assignments, check-in
-            requirements, and quotas.
+          <li class="feature-item">
+            <span class="status new">بهبود</span>
+            ایجاد سالن‌ها برای شعبه (نیازمند فیلدهای جدید)
+          </li>
+          <li class="feature-item">
+            <span class="status exists">موجود</span>
+            ایجاد گونه‌ها
+          </li>
+          <li class="feature-item">
+            <span class="status new">بهبود</span>
+            تعریف تیکت ها (محصولات) با قابلیت‌های جدید:
+            <ul>
+              <li>انتخاب سالن (ها)</li>
+              <li>قیمت‌گذاری بر اساس گونه مشتری</li>
+              <li>تعریف سهمیه برای تیکت</li>
+            </ul>
+          </li>
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            اتصال اپ کیوسک با سامانه جامع
           </li>
         </ul>
-      </li>
-      <li>
-        <h3>Attendee Data Management</h3>
-        <ul>
-          <li>
-            <strong>Attendee Information Collection:</strong> Capturing
-            attendee-specific information (e.g., name, email, phone).
-          </li>
-          <li>
-            <strong>Permissions for Modifications:</strong> Allowing attendees
-            to modify their orders or personal information after purchase or
-            check-in.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>Order Management</h3>
-        <ul>
-          <li>
-            <strong>Order Entity:</strong> Managing purchases, payments, order
-            statuses, and reservations is essential.
-          </li>
-          <li>
-            <strong>Reservation Periods:</strong> Holding items in carts for a
-            specified time to prevent overbooking.
+      </div>
+
+      <div class="phase">
+        <h2 class="phase-title">فاز دوم: ثبت تراکنش و پرداخت</h2>
+        <ul class="feature-list">
+          <li class="feature-item">ثبت تراکنش بازدیدکننده</li>
+          <li class="feature-item">انتخاب سالن‌های بازدید</li>
+          <li class="feature-item">تعیین گونه مشتری</li>
+          <li class="feature-item">صدور و چاپ بارکد</li>
+          <li class="feature-item">اعتبارسنجی و ابطال بلیت با اسکن بارکد</li>
+          <li class="feature-item">
+            مدیریت تراکنش‌ها:
+            <ul>
+              <li>ویرایش تراکنش</li>
+              <li>لغو تراکنش</li>
+              <li>عودت و استرداد</li>
+              <li>لغو بخشی از تیکت</li>
+            </ul>
           </li>
         </ul>
-      </li>
-      <li>
-        <h3>Quota Management</h3>
-        <ul>
-          <li>
-            <strong>Inventory Control:</strong> Setting and managing quotas on
-            tickets to control availability.
-          </li>
+      </div>
+
+      <div class="phase">
+        <h2 class="phase-title">فاز سوم: توسعه قابلیت‌های سلف سرویس</h2>
+        <ul class="feature-list">
+          <li class="feature-item">احراز هویت گونه مشتری به صورت خودکار</li>
+          <li class="feature-item">خرید تیکت به صورت سلف سرویس</li>
+          <li class="feature-item">مدیریت تراکنش‌ها توسط کاربر</li>
         </ul>
-      </li>
-      <li>
-        <h3>Check-in Functionality</h3>
-        <ul>
-          <li>
-            <strong>Ticket Validation:</strong> Systems for validating tickets
-            at entry points, including multi-use tickets.
-          </li>
-          <li>
-            <strong>Check-in Messaging:</strong> Providing messages or warnings
-            during check-in (e.g., "Requires special attention").
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>Discounts and Vouchers Specific to Ticketing</h3>
-        <ul>
-          <li>
-            <strong>Customer-Specific Discounts:</strong> Discounts based on
-            customer types (e.g., student, retired) and specific events or
-            halls.
-          </li>
-          <li>
-            <strong>Voucher Codes and Promotions:</strong> Generating and
-            managing vouchers and promotional codes with specific application
-            conditions.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>Add-on Products</h3>
-        <ul>
-          <li>
-            <strong>Add-ons Management:</strong> Products that can only be
-            purchased alongside other products (e.g., workshops with conference
-            tickets).
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>Email Communication and Templates</h3>
-        <ul>
-          <li>
-            <strong>Automated Emails:</strong> Sending order confirmations,
-            tickets, and reminders.
-          </li>
-          <li>
-            <strong>Customizable Templates:</strong> Managing templates for
-            various communications.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>Refunds and Cancellations</h3>
-        <ul>
-          <li>
-            <strong>Order Modifications:</strong> Allowing cancellations,
-            refunds, or ticket exchanges within defined policies.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>UI Customization and Branding</h3>
-        <ul>
-          <li>
-            <strong>Event Branding:</strong> Customizable UI elements to match
-            event themes.
-          </li>
-          <li>
-            <strong>Custom Texts:</strong> Setting front page texts,
-            confirmation messages, and other content.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>Sales Channel Integration</h3>
-        <ul>
-          <li>
-            <strong>Online and On-site Sales:</strong> Supporting online ticket
-            purchases and integrating with kiosks or POS systems for on-site
-            sales.
-          </li>
-        </ul>
-      </li>
-    </ol>
-
-    <hr />
-
-    <h2>Suggestions for Enhancing the TS to Support Ticketing</h2>
-
-    <p>
-      To integrate ticketing functionality, consider the following enhancements
-      and additions to your TS:
-    </p>
-
-    <h3>1. Add an Event Entity</h3>
-
-    <p>
-      <strong>Introduce an <code>events</code> collection</strong> to represent
-      individual events.
-    </p>
-
-    <pre><code>events: {
-  id: string;
-  names: string[];
-  eventType: "single" | "series";
-  dateRange: { from: Date; to: Date };
-  languages: string[];
-  defaultLanguage: string;
-  location: {
-    address: string;
-    country: string;
-    province: string;
-    city: string;
-    latitude: string;
-    longitude: string;
-    timezone: string;
-  };
-  contactInfo: {
-    url: string;
-    email: string;
-    phoneNumber: string;
-  };
-  salesChannels: string[]; // References to salesChannels
-  currency: string;
-  description: string[];
-  images: string[];
-  uiCustomization: {
-    headerImage: string[];
-    bannerTextTop: string[];
-    bannerTextBottom: string[];
-    buttonTexts: string[];
-    buttonColor: string;
-    backgroundColor: string;
-    highlightColor: string;
-    logo: string[];
-  };
-  settings: {
-    allowOrderModification: boolean;
-    modificationDeadline: Date;
-    allowInfoChangeAfterCheckIn: boolean;
-    showEventTitleWithHeaderImage: boolean;
-    productsOrdering: {
-      orderBy: "date" | "name";
-      orderDirection: "asc" | "desc";
-    };
-    hideSoldOutProducts: boolean;
-  };
-}[];
-</code></pre>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>
-        This entity captures all event-specific data, allowing you to manage
-        multiple events with individual configurations.
-      </li>
-      <li>
-        Supports event types, date ranges, locations, and UI customization.
-      </li>
-    </ul>
-
-    <h3>2. Extend the Product Entity or Create a Ticket Entity</h3>
-
-    <p>
-      <strong
-        >Option 1: Extend the existing <code>products</code> schema.</strong
-      >
-    </p>
-
-    <p><strong>Enhancements:</strong></p>
-
-    <pre><code>products: {
-  // existing fields ...
-  productType: "general" | "ticket" | "add-on";
-  eventId: string; // Associated event
-  validityPeriod: { from: Date; to: Date };
-  quotaId: string; // For quota management
-  checkInSettings: {
-    requiresAttention: boolean;
-    checkInMessage: string[];
-    isMultiUse: boolean;
-    usageLimit: number;
-  };
-  priceSettings: {
-    basePrice: number;
-    discountedPrices: { customerCategoryId: string; price: number }[];
-    tax: number;
-  };
-  isAddOn: boolean;
-  mandatoryAddOn: boolean;
-  // ... other ticket-specific fields
-}[];
-</code></pre>
-
-    <p>
-      <strong
-        >Option 2: Introduce a <code>tickets</code> entity separate from
-        <code>products</code>.</strong
-      >
-    </p>
-
-    <p><strong>Ticket Schema:</strong></p>
-
-    <pre><code>tickets: {
-  id: string;
-  eventId: string;
-  names: string[];
-  description: string[];
-  validityPeriod: { from: Date; to: Date };
-  quotaId: string;
-  checkInSettings: { /* as above */ };
-  priceSettings: { /* as above */ };
-  isActive: boolean;
-  images: string[];
-  // ... other fields
-}[];
-</code></pre>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>
-        Extending <code>products</code> keeps the schema unified but may
-        complicate differentiation.
-      </li>
-      <li>
-        A separate <code>tickets</code> entity allows for specialized handling
-        of ticket-specific attributes.
-      </li>
-    </ul>
-
-    <h3>3. Implement Attendee and Order Management</h3>
-
-    <p><strong>Attendee Schema:</strong></p>
-
-    <pre><code>attendees: {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  additionalInfo: { [key: string]: any }; // Custom fields
-  customerId: string; // If linked to a customer
-  orders: string[]; // Associated orders
-}[];
-</code></pre>
-
-    <p><strong>Order Schema:</strong></p>
-
-    <pre><code>orders: {
-  id: string;
-  attendeeId: string;
-  eventId: string;
-  orderDate: Date;
-  status: "pending" | "paid" | "cancelled" | "refunded";
-  paymentInfo: {
-    paymentMethod: string;
-    transactionId: string;
-    amount: number;
-  };
-  orderItems: {
-    productId: string;
-    quantity: number;
-    unitPrice: number;
-    totalPrice: number;
-    addOns: { productId: string; quantity: number }[];
-    discountsApplied: { discountId: string; amount: number }[];
-  }[];
-  voucherCode: string;
-  reservationExpiry: Date; // For unpaid/pending orders
-}[];
-</code></pre>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>
-        <strong>Attendees</strong> represent individuals attending events.
-      </li>
-      <li>
-        <strong>Orders</strong> track purchases, payments, and order statuses.
-      </li>
-      <li>Facilitates order modifications, cancellations, and refunds.</li>
-    </ul>
-
-    <h3>4. Introduce Quota Management</h3>
-
-    <p><strong>Quota Schema:</strong></p>
-
-    <pre><code>quotas: {
-  id: string;
-  name: string;
-  totalQuantity: number;
-  soldQuantity: number;
-  reservedQuantity: number;
-  products: string[]; // Associated products
-  eventId: string;
-  isActive: boolean;
-  closeOnSoldOut: boolean;
-  allowOverbookingAfterCheckOut: boolean;
-}[];
-</code></pre>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>Manages inventory and availability of tickets.</li>
-      <li>Prevents overbooking and handles complex inventory scenarios.</li>
-    </ul>
-
-    <h3>5. Enhance Customer Categories and Discounts</h3>
-
-    <p><strong>Customer Categories:</strong></p>
-    <ul>
-      <li>Expand to include types like "student," "retired," etc.</li>
-      <li>Assign discounts based on categories.</li>
-    </ul>
-
-    <p><strong>Discounts Schema:</strong></p>
-
-    <pre><code>discounts: {
-  id: string;
-  name: string;
-  discountType: "percentage" | "fixed";
-  amount: number;
-  applicableTo: {
-    productIds: string[];
-    eventIds: string[];
-    customerCategoryIds: string[];
-  };
-  validityPeriod: { from: Date; to: Date };
-  isActive: boolean;
-  conditions: {
-    minQuantity?: number;
-    minTotalPrice?: number;
-  };
-  excludeVouchers: boolean;
-}[];
-</code></pre>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>
-        Enables complex discount scenarios based on customer categories and
-        conditions.
-      </li>
-      <li>Supports both percentage and fixed amount discounts.</li>
-    </ul>
-
-    <h3>6. Implement Vouchers and Promotional Codes</h3>
-
-    <p><strong>Voucher Schema:</strong></p>
-
-    <pre><code>vouchers: {
-  code: string;
-  discountId: string; // Associated discount
-  usageLimit: number;
-  usedCount: number;
-  validEvents: string[];
-  validProducts: string[];
-  validUntil: Date;
-  isActive: boolean;
-}[];
-</code></pre>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>Manages voucher codes for promotions.</li>
-      <li>Controls usage limits and validity.</li>
-    </ul>
-
-    <h3>7. Add Check-in Functionality</h3>
-
-    <p><strong>Check-in Logs:</strong></p>
-
-    <pre><code>checkIns: {
-  id: string;
-  orderId: string;
-  attendeeId: string;
-  eventId: string;
-  productId: string;
-  checkInTime: Date;
-  checkInBy: string; // Operator ID
-  location: string; // Entrance or device ID
-  isExitScan: boolean;
-  notes: string[];
-}[];
-</code></pre>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>Tracks attendance and validates tickets.</li>
-      <li>Supports multi-use tickets and check-in messages.</li>
-    </ul>
-
-    <h3>8. Enhance Email Communication</h3>
-
-    <p><strong>Email Templates:</strong></p>
-    <ul>
-      <li>Store templates with placeholders for dynamic content.</li>
-      <li>Customize messages for confirmations, tickets, and reminders.</li>
-    </ul>
-
-    <p><strong>Automated Email Triggers:</strong></p>
-    <ul>
-      <li>Send emails based on specific events (e.g., order paid).</li>
-    </ul>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>Improves communication with attendees.</li>
-      <li>Ensures consistent and professional messaging.</li>
-    </ul>
-
-    <h3>9. Implement Refunds and Cancellation Policies</h3>
-
-    <p><strong>Order Modification Capabilities:</strong></p>
-    <ul>
-      <li>Allow attendees to cancel or modify orders within policies.</li>
-    </ul>
-
-    <p><strong>Refund Processing:</strong></p>
-    <ul>
-      <li>Integrate with payment systems to handle refunds.</li>
-    </ul>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>Enhances customer service.</li>
-      <li>Facilitates financial management of refunds.</li>
-    </ul>
-
-    <h3>10. Enable UI Customization and Event Branding</h3>
-
-    <p><strong>Event-Specific UI Settings:</strong></p>
-    <ul>
-      <li>Customize UI elements for each event.</li>
-    </ul>
-
-    <p><strong>Custom Texts and Images:</strong></p>
-    <ul>
-      <li>Set front page text, confirmation messages, and branding images.</li>
-    </ul>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>Provides a tailored experience for attendees.</li>
-      <li>Aligns the ticketing process with event branding.</li>
-    </ul>
-
-    <h3>11. Integrate with Sales Channels</h3>
-
-    <p><strong>Online Ticketing Support:</strong></p>
-    <ul>
-      <li>Extend <code>salesChannels</code> to include online platforms.</li>
-    </ul>
-
-    <p><strong>On-site Sales and Validation:</strong></p>
-    <ul>
-      <li>Integrate with kiosks, POS systems, and mobile apps.</li>
-    </ul>
-
-    <p><strong>Explanation:</strong></p>
-    <ul>
-      <li>Expands the reach of ticket sales.</li>
-      <li>Streamlines on-site operations.</li>
-    </ul>
-
-    <h3>12. Additional Features</h3>
-
-    <ul>
-      <li>
-        <strong>Reservation Periods:</strong> Implement cart reservation timers
-        to prevent overbooking.
-      </li>
-      <li>
-        <strong>Product Variations and Add-ons:</strong> Support different
-        ticket types and mandatory add-ons.
-      </li>
-      <li>
-        <strong>Multi-use Tickets:</strong> Track usage counts for tickets that
-        allow multiple entries.
-      </li>
-    </ul>
-
-    <hr />
-
-    <h2>How to Add Ticket Configuration with New Tickets</h2>
-
-    <p>To add ticket configuration:</p>
-
-    <ol>
-      <li>
-        <strong>Update Data Models:</strong> Incorporate the new entities
-        (<code>events</code>, <code>tickets</code>, <code>orders</code>,
-        <code>attendees</code>, <code>quotas</code>). Extend existing entities
-        (<code>products</code>, <code>salesChannels</code>,
-        <code>customers</code>).
-      </li>
-      <li>
-        <strong>Define Relationships:</strong> Link <code>tickets</code> to
-        <code>events</code>, <code>orders</code> to <code>attendees</code> and
-        <code>events</code>, <code>quotas</code> to <code>products</code> and
-        <code>events</code>.
-      </li>
-      <li>
-        <strong>Implement Business Logic:</strong> Develop functionalities for
-        ticket sales, check-in processes, order management, and inventory
-        control.
-      </li>
-      <li>
-        <strong>Enhance User Interfaces:</strong> Create interfaces for event
-        creation, ticket management, attendee information collection, and
-        check-in.
-      </li>
-      <li>
-        <strong>Integrate Payment Systems:</strong> Ensure seamless payment
-        processing, including support for refunds.
-      </li>
-      <li>
-        <strong>Set Up Communication Channels:</strong> Deploy email systems
-        with templates and automated triggers.
-      </li>
-      <li>
-        <strong>Test Thoroughly:</strong> Validate all new functionalities in
-        various scenarios to ensure reliability.
-      </li>
-    </ol>
-
-    <hr />
-
-    <h2>Conclusion</h2>
-
-    <p>
-      By identifying and addressing the missing components, you can effectively
-      integrate ticketing into your Total Solution. The key areas to focus on
-      are:
-    </p>
-
-    <ul>
-      <li>
-        <strong>Event and Ticket Entities:</strong> Core to the ticketing
-        system.
-      </li>
-      <li>
-        <strong>Order and Attendee Management:</strong> Essential for handling
-        purchases and attendee information.
-      </li>
-      <li>
-        <strong>Quota and Check-in Systems:</strong> Critical for inventory
-        control and event operations.
-      </li>
-      <li>
-        <strong>Discounts, Vouchers, and Communication:</strong> Enhance
-        customer experience and marketing efforts.
-      </li>
-    </ul>
-
-    <p>
-      I recommend collaborating with your development team to plan the
-      integration, ensuring alignment with your system's architecture and
-      business objectives. Consider starting with event and ticket management as
-      they are foundational, then progressively implement the other components.
-    </p>
-
-    <p>
-      If you need further assistance or clarification on any of these
-      suggestions, please don't hesitate to ask.
-    </p>
+      </div>
+    </div>
   </body>
 </html>
