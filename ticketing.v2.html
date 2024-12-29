@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>سیستم جامع بلیت‌دهی</title>
+    <style>
+      @font-face {
+        font-family: "IRANSansX";
+        src: url("fonts/IRANSansXV.woff2") format("woff2"),
+          url("fonts/IRANSansXV.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      body {
+        font-family: "IRANSansX", Tahoma, sans-serif;
+        line-height: 1.6;
+        margin: 40px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .phase {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+      }
+      .phase-title {
+        color: #2196f3;
+        border-bottom: 2px solid #2196f3;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .feature-list {
+        padding-right: 20px;
+      }
+      .feature-item {
+        margin-bottom: 10px;
+      }
+      .status {
+        font-size: 0.8em;
+        padding: 2px 6px;
+        border-radius: 3px;
+        margin-right: 5px;
+      }
+      .exists {
+        background-color: #4caf50;
+        color: white;
+      }
+      .new {
+        background-color: #ff9800;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>سیستم جامع بلیت‌دهی</h1>
+
+      <div class="phase">
+        <h2 class="phase-title">فاز صفر: انتقال و یکپارچه‌سازی</h2>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            اتصال اپ اندرویدی به API های اپ جامع
+          </li>
+          <li class="feature-item">
+            <span class="status new">بهبود</span>
+            تغییرات ساختاری در رابط کاربری پنل کانفیگ بلیت‌دهی:
+            <ul>
+              <li>تغییر واژه محصول به بلیت</li>
+              <li>تغییر واژه مشتری به بازدیدکننده</li>
+              <li>...</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <h2 class="phase-title">فاز اول: تعریف موارد پایه</h2>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="status exists">موجود</span>
+            ایجاد کسب و کار
+          </li>
+          <li class="feature-item">
+            <span class="status exists">موجود</span>
+            ایجاد شعبه
+          </li>
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            ایجاد گونه‌ها
+          </li>
+          <li class="feature-item">
+            <span class="status new">بهبود</span>
+            تعریف بلیت‌ها با قابلیت‌های جدید:
+            <ul>
+              <li>قیمت‌گذاری بر اساس گونه بازدیدکننده و کد تخفیف</li>
+              <li>تعریف سهمیه روزانه برای بلیت</li>
+              <li>حالت‌های قیمتی برای گونه‌های مختلف</li>
+            </ul>
+          </li>
+          <li class="feature-item">
+            <span class="status new">بهبود</span>
+            افزودن فیلد های جدید به کیوسک
+          </li>
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            افزودن فیلد های جدید به گیشه
+          </li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <h2 class="phase-title">فاز دوم: ثبت سفارش و پرداخت</h2>
+        <ul class="feature-list">
+          <li class="feature-item">ثبت سفارش بازدیدکننده</li>
+          <li class="feature-item">تعیین گونه بازدیدکننده و اعمال کد تخفیف</li>
+          <li class="feature-item">صدور و چاپ بارکد</li>
+          <li class="feature-item">اعتبارسنجی و ابطال بلیت با اسکن بارکد</li>
+          <li class="feature-item">
+            مدیریت سفارش‌ها:
+            <ul>
+              <li>ویرایش سفارش</li>
+              <li>لغو سفارش</li>
+              <li>عودت و استرداد</li>
+              <li>لغو بخشی از بلیت</li>
+            </ul>
+          </li>
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            قابلیت ویرایش و مدیریت سفارش‌ها توسط ادمین
+          </li>
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            ارسال ایمیل تأیید پرداخت
+          </li>
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            سیستم ارسال گروهی ایمیل
+          </li>
+          <li class="feature-item">
+            <span class="status new">جدید</span>
+            سیستم رهگیری موجودی بلیت‌ها
+          </li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <h2 class="phase-title">فاز سوم: توسعه قابلیت‌های سلف سرویس</h2>
+        <ul class="feature-list">
+          <li class="feature-item">احراز هویت گونه مشتری به صورت خودکار</li>
+          <li class="feature-item">خرید بلیت به صورت سلف سرویس</li>
+          <li class="feature-item">مدیریت سفارش‌ها توسط کاربر</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
