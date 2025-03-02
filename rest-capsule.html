@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>سیستم رزرو کپسول استراحت</title>
+    <style>
+      @font-face {
+        font-family: "IRANSansX";
+        src: url("fonts/IRANSansXV.woff2") format("woff2"),
+          url("fonts/IRANSansXV.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      body {
+        font-family: "IRANSansX", Tahoma, sans-serif;
+        line-height: 1.8;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f2f5;
+        direction: rtl;
+        text-align: right;
+        color: #1a1a1a;
+      }
+
+      .container {
+        position: relative;
+        margin-right: 280px; /* Adjust for sidebar width */
+        padding: 0 0px 0 30px;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100vh;
+        background: white;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar-content {
+        padding: 2rem 1rem;
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      .sidebar h3 {
+        color: #1a237e;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e8eaf6;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar ul ul {
+        padding-right: 1.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .sidebar li {
+        margin: 0.8rem 0;
+      }
+
+      .sidebar a {
+        color: #3949ab;
+        text-decoration: none;
+        display: block;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+      }
+
+      .sidebar a:hover {
+        background-color: #e8eaf6;
+      }
+
+      .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        background: white;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+      }
+
+      .sidebar-toggle span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background: #1a237e;
+        margin: 4px 0;
+        border-radius: 3px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        .container {
+          padding: 0 10px 0 10px;
+          margin-right: 0;
+        }
+
+        .sidebar {
+          transform: translateX(100%);
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .sidebar-toggle {
+          display: block;
+        }
+      }
+
+      /* Add smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      h1 {
+        color: #1a237e;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid #e8eaf6;
+      }
+
+      h2 {
+        color: #283593;
+        font-size: 1.8rem;
+        margin-top: 2.5rem;
+      }
+
+      .process-step {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+      }
+
+      .mockup {
+        background: #f8fafc;
+        border: 1px solid #e5e9f0;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-radius: 8px;
+      }
+
+      .pod-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.2rem;
+        margin: 1.5rem 0;
+      }
+
+      .pod-cell {
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        background: #f1f8e9;
+        border: 1px solid #c5e1a5;
+      }
+
+      .pod-cell.occupied {
+        background: #ffebee;
+        border: 1px solid #ffcdd2;
+      }
+
+      .pod-number {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2e7d32;
+        margin-bottom: 0.5rem;
+      }
+
+      .occupied .pod-number {
+        color: #c62828;
+      }
+
+      .time-slot {
+        display: inline-block;
+        padding: 0.8rem 1.2rem;
+        margin: 0.5rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .time-slot:hover {
+        background: #f5f5f5;
+      }
+
+      .payment-method {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin: 0.8rem 0;
+        cursor: pointer;
+      }
+
+      .payment-method:hover {
+        background: #f5f5f5;
+      }
+
+      .api-endpoint {
+        background: #f8f9fa;
+        padding: 1.2rem;
+        margin: 1rem 0;
+        border-radius: 8px;
+        border-right: 4px solid #3949ab;
+      }
+
+      .api-endpoint code {
+        display: block;
+        font-family: "Courier New", monospace;
+        font-size: 1.1rem;
+        color: #3949ab;
+        margin-bottom: 0.8rem;
+        background: #e8eaf6;
+        padding: 0.5rem;
+        border-radius: 4px;
+      }
+
+      .important-note {
+        background: #fff3e0;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 8px;
+        border-right: 4px solid #ff9800;
+      }
+
+      .completion-info .mockup {
+        border-right: 4px solid #4caf50;
+      }
+
+      .completion-info .mockup.failure-case {
+        border-right: 4px solid #f44336;
+      }
+
+      ul {
+        padding-right: 1.5rem;
+      }
+
+      li {
+        margin: 0.5rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div class="sidebar-content">
+          <ul>
+            <li><a href="#intro">معرفی پروژه</a></li>
+            <li><a href="#splash">صفحه خوشامدگویی</a></li>
+            <li>
+              <a href="#step1">مرحله ۱: انتخاب موقعیت</a>
+            </li>
+            <li>
+              <a href="#step2">مرحله ۲: انتخاب کپسول</a>
+            </li>
+            <li>
+              <a href="#step3">مرحله ۳: احراز هویت کاربر</a>
+            </li>
+            <li>
+              <a href="#step4">مرحله ۴: انتخاب زمان</a>
+              <ul>
+                <li><a href="#step4-immediate">رزرو فوری</a></li>
+                <li><a href="#step4-advance">رزرو از پیش</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#step5">مرحله ۵: تأیید و پرداخت</a>
+            </li>
+            <li><a href="#api">مستندات API</a></li>
+          </ul>
+        </div>
+        <button class="sidebar-toggle" aria-label="Toggle menu">
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+      </div>
+      <h1>طراحی رابط کاربری سیستم رزرو کپسول استراحت</h1>
+
+      <section id="intro">
+        <h2>معرفی پروژه</h2>
+        <div class="process-step">
+          <p>
+            این سیستم برای رزرو آسان و سریع کپسول‌های استراحت در فرودگاه‌های
+            کشور طراحی شده است. هدف اصلی، ارائه رابط کاربری ساده و کاربرپسند
+            برای مسافران است.
+          </p>
+        </div>
+      </section>
+      <section id="splash">
+        <h2>صفحه خوشامدگویی (Splash Screen)</h2>
+        <div class="process-step">
+          <div class="mockup">
+            <h3>المان‌های صفحه خوشامدگویی:</h3>
+            <ul>
+              <li>لوگوی سیستم</li>
+              <li>پیام خوشامدگویی متحرک</li>
+              <li>دکمه "شروع"</li>
+              <li>نمایش ساعت و تاریخ</li>
+              <li>زبان‌های در دسترس</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="step1">
+        <h2>مرحله ۱: انتخاب موقعیت</h2>
+        <div class="process-step">
+          <h3>دو حالت رزرو:</h3>
+
+          <div class="mockup">
+            <h4>الف) رزرو در محل (پیش‌فرض)</h4>
+            <ul>
+              <li>نمایش خودکار کپسول‌های ترمینال فعلی</li>
+              <li>نمایش نام ترمینال در بالای صفحه</li>
+              <li>امکان تغییر ترمینال در همان فرودگاه</li>
+            </ul>
+          </div>
+
+          <div class="mockup">
+            <h4>ب) رزرو برای فرودگاه دیگر</h4>
+            <ul>
+              <li>جستجوی ساده فرودگاه (مثال: "مهرآباد" یا "امام خمینی")</li>
+              <li>انتخاب ترمینال پس از انتخاب فرودگاه</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="step2">
+        <h2>مرحله ۲: انتخاب کپسول</h2>
+        <div class="process-step">
+          <h3>نمای کپسول‌ها</h3>
+          <div class="pod-grid">
+            <div class="pod-cell">
+              <div class="pod-number">کپسول ۱۰۱</div>
+              <div class="pod-status available">آزاد</div>
+              <div class="pod-price">۱۰۰,۰۰۰ تومان/ساعت</div>
+            </div>
+            <div class="pod-cell occupied">
+              <div class="pod-number">کپسول ۱۰۲</div>
+              <div class="pod-status">اشغال</div>
+              <div class="pod-availability">آزاد شدن: ۱۴:۳۰</div>
+              <div class="time-remaining">۱ ساعت و ۳۰ دقیقه مانده</div>
+            </div>
+            <div class="pod-cell">
+              <div class="pod-number">کپسول ۱۰۳</div>
+              <div class="pod-status available">آزاد</div>
+              <div class="pod-price">۱۰۰,۰۰۰ تومان/ساعت</div>
+            </div>
+            <div class="pod-cell">
+              <div class="pod-number">کپسول ۱۰۴</div>
+              <div class="pod-status available">آزاد</div>
+              <div class="pod-price">۱۰۰,۰۰۰ تومان/ساعت</div>
+            </div>
+            <div class="pod-cell occupied">
+              <div class="pod-number">کپسول ۱۰۵</div>
+              <div class="pod-status">اشغال</div>
+              <div class="pod-availability">آزاد شدن: ۱۶:۰۰</div>
+              <div class="time-remaining">۳ ساعت مانده</div>
+            </div>
+            <div class="pod-cell">
+              <div class="pod-number">کپسول ۱۰۶</div>
+              <div class="pod-status available">آزاد</div>
+              <div class="pod-price">۱۰۰,۰۰۰ تومان/ساعت</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="step3">
+        <h2>مرحله 3: احراز هویت کاربر</h2>
+        <div class="process-step">
+          <div class="mockup">
+            <h3>مراحل احراز هویت:</h3>
+            <ol>
+              <li>وارد کردن شماره موبایل یا کد ملی</li>
+              <li>دریافت و وارد کردن کد OTP</li>
+              <li>تأیید هویت</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="step4">
+        <h2>مرحله 4: انتخاب زمان</h2>
+        <div class="process-step">
+          <h3 id="step4-immediate">الف) رزرو فوری</h3>
+          <div class="mockup">
+            <p>انتخاب مدت زمان:</p>
+            <div class="time-slot">۱ ساعت</div>
+            <div class="time-slot">۲ ساعت</div>
+            <div class="time-slot">۳ ساعت</div>
+            <div class="time-slot">۴ ساعت</div>
+          </div>
+
+          <h3 id="step4-advance">ب) رزرو از پیش</h3>
+          <div class="mockup">
+            <p>۱. انتخاب تاریخ (حداکثر ۷ روز آینده)</p>
+            <p>۲. ساعت‌های در دسترس:</p>
+            <div class="time-slot">۰۹:۰۰-۱۰:۰۰</div>
+            <div class="time-slot">۱۰:۰۰-۱۱:۰۰</div>
+            <div class="time-slot">۱۱:۰۰-۱۲:۰۰</div>
+            <p>۳. انتخاب مدت زمان (۱ تا ۴ ساعت)</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="step5">
+        <h2>مرحله ۵: تأیید، پرداخت و تکمیل رزرو</h2>
+        <div class="process-step">
+          <h3>۱. تأیید اطلاعات رزرو</h3>
+          <div class="mockup">
+            <ul>
+              <li>شماره و موقعیت کپسول</li>
+              <li>تاریخ و ساعت رزرو</li>
+              <li>مدت زمان استفاده</li>
+              <li>مبلغ کل</li>
+            </ul>
+          </div>
+
+          <h3>۲. انتخاب روش پرداخت</h3>
+          <div class="payment-methods">
+            <div class="payment-method">
+              <i class="payment-icon">💳</i>
+              <span>درگاه پرداخت آنلاین</span>
+            </div>
+            <div class="payment-method">
+              <i class="payment-icon">🏧</i>
+              <span>دستگاه کارتخوان (POS)</span>
+            </div>
+            <div class="payment-method">
+              <i class="payment-icon">📱</i>
+              <span>اسکن QR Code با موبایل</span>
+            </div>
+          </div>
+
+          <h3>۳. تکمیل فرآیند</h3>
+          <div class="completion-info">
+            <div class="mockup success-case">
+              <h4>در صورت پرداخت موفق:</h4>
+              <ul>
+                <li>نمایش پیام تأیید تراکنش</li>
+                <li>کد رهگیری رزرو</li>
+                <li>
+                  اطلاعات دسترسی به کپسول:
+                  <ul>
+                    <li>کد ورود به کپسول</li>
+                    <li>موقعیت دقیق کپسول</li>
+                    <li>زمان شروع و پایان</li>
+                  </ul>
+                </li>
+                <li>ارسال اطلاعات از طریق پیامک/ایمیل</li>
+                <li>راهنمای استفاده از کپسول</li>
+                <li>شماره تماس پشتیبانی</li>
+              </ul>
+            </div>
+
+            <div class="mockup failure-case">
+              <h4>در صورت بروز خطا:</h4>
+              <ul>
+                <li>نمایش علت خطا</li>
+                <li>گزینه تلاش مجدد</li>
+                <li>گزینه تغییر روش پرداخت</li>
+                <li>امکان بازگشت به مراحل قبل</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="return-home">
+        <p class="timeout-notice">
+          در صورت عدم فعالیت به مدت مشخصی، سیستم به صورت خودکار به صفحه اصلی باز
+          خواهد گشت.
+        </p>
+      </div>
+
+      <section id="api">
+        <h2>مستندات API مورد نیاز (بسیار کلی و اجمالی)</h2>
+        <div class="process-step">
+          <h3>دریافت اطلاعات (GET)</h3>
+          <div class="api-docs">
+            <div class="api-endpoint">
+              <code>/api/airports</code>
+              <p>دریافت لیست فرودگاه‌ها برای نمایش در صفحه انتخاب موقعیت</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/terminals</code>
+              <p>دریافت لیست ترمینال‌های هر فرودگاه</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/pods/status</code>
+              <p>
+                دریافت وضعیت لحظه‌ای تمام کپسول‌ها (آزاد/اشغال/زمان آزاد شدن)
+              </p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/pods/availability</code>
+              <p>دریافت زمان‌های در دسترس برای رزرو در تاریخ مشخص</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/bookings/user</code>
+              <p>دریافت لیست رزروهای فعال کاربر</p>
+            </div>
+          </div>
+
+          <h3>ثبت و تغییر اطلاعات (POST/PUT)</h3>
+          <div class="api-docs">
+            <div class="api-endpoint">
+              <code>/api/auth</code>
+              <p>احراز هویت اولیه کاربر با شماره موبایل یا کد ملی</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/auth/verify</code>
+              <p>تایید کد OTP و دریافت توکن دسترسی</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/bookings/create</code>
+              <p>ثبت درخواست رزرو جدید</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/bookings/cancel</code>
+              <p>لغو رزرو موجود</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/bookings/modify</code>
+              <p>تغییر در زمان یا مدت رزرو</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/payments/init</code>
+              <p>شروع فرآیند پرداخت و دریافت لینک درگاه</p>
+            </div>
+            <div class="api-endpoint">
+              <code>/api/payments/verify</code>
+              <p>تایید پرداخت و فعال‌سازی رزرو</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
