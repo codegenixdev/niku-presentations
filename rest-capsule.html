@@ -31,6 +31,32 @@
         padding: 0 0px 0 30px;
       }
 
+      .payment-icon-img {
+        width: 24px; /* Adjust size as needed */
+        height: 24px; /* Adjust size as needed */
+        object-fit: cover;
+        vertical-align: middle;
+        margin-left: 8px; /* Since it's RTL, use margin-left instead of margin-right */
+      }
+
+      .payment-method {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin: 0.8rem 0;
+        cursor: pointer;
+      }
+
+      /* Optional: Add hover effect for the image */
+      .payment-method:hover .payment-icon-img {
+        transform: scale(1.1);
+        transition: transform 0.2s ease;
+      }
+
       .sidebar {
         position: fixed;
         top: 0;
@@ -469,7 +495,11 @@
               <span>درگاه پرداخت آنلاین</span>
             </div>
             <div class="payment-method">
-              <i class="payment-icon">🏧</i>
+              <img
+                src="images/pos.jpg"
+                alt="POS device"
+                class="payment-icon-img"
+              />
               <span>دستگاه کارتخوان (POS)</span>
             </div>
             <div class="payment-method">
