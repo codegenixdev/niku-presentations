@@ -293,6 +293,46 @@
       li {
         margin: 0.5rem 0;
       }
+      .api-details {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+      }
+
+      .api-details h4 {
+        color: #1a237e;
+        margin: 0.5rem 0;
+      }
+
+      .api-details pre {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 4px;
+        border: 1px solid #e0e0e0;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        direction: ltr; /* Make content LTR */
+        text-align: left; /* Align text to left */
+      }
+
+      .api-endpoint {
+        margin-bottom: 2rem;
+      }
+
+      .api-endpoint code {
+        font-weight: bold;
+        color: #2962ff;
+        direction: ltr; /* Make code LTR */
+        display: inline-block; /* Helps maintain LTR in RTL context */
+      }
+
+      /* Optional: Add this if you want to maintain RTL for comments inside pre */
+      .api-details pre .comment {
+        direction: rtl;
+        unicode-bidi: embed;
+      }
     </style>
   </head>
   <body>
@@ -549,63 +589,284 @@
       </div>
 
       <section id="api">
-        <h2>مستندات API مورد نیاز (بسیار کلی و اجمالی)</h2>
+        <h2>مستندات API مورد نیاز</h2>
         <div class="process-step">
           <h3>دریافت اطلاعات (GET)</h3>
           <div class="api-docs">
             <div class="api-endpoint">
-              <code>/api/airports</code>
+              <code>GET /api/airports</code>
               <p>دریافت لیست فرودگاه‌ها برای نمایش در صفحه انتخاب موقعیت</p>
+              <div class="api-details">
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "airports": [
+    {
+      "id": "string",
+      "name": "string",
+      "city": "string"
+    }
+  ]
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/places</code>
+              <code>GET /api/places</code>
               <p>دریافت لیست مکان های هر فرودگاه</p>
+              <div class="api-details">
+                <h4>پارامترهای Query:</h4>
+                <pre>
+airportId: string (required)
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "places": [
+    {
+      "id": "string",
+      "name": "string",
+      "description": "string"
+    }
+  ]
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/pods/status</code>
-              <p>
-                دریافت وضعیت لحظه‌ای تمام کپسول‌ها (آزاد/اشغال/زمان آزاد شدن)
-              </p>
+              <code>GET /api/pods/status</code>
+              <p>دریافت وضعیت لحظه‌ای تمام کپسول‌ها</p>
+              <div class="api-details">
+                <h4>پارامترهای Query:</h4>
+                <pre>
+placeId: string (required)
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "pods": [
+    {
+      "id": "string",
+      "number": "string",
+      "status": "available|occupied",
+      "releaseTime": "string", // زمان آزاد شدن در صورت اشغال بودن
+      "pricePerHour": "number"
+    }
+  ]
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/pods/availability</code>
+              <code>GET /api/pods/availability</code>
               <p>دریافت زمان‌های در دسترس برای رزرو در تاریخ مشخص</p>
+              <div class="api-details">
+                <h4>پارامترهای Query:</h4>
+                <pre>
+podId: string (required)
+date: string (YYYY-MM-DD)
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "availableSlots": [
+    {
+      "startTime": "string (HH:mm)",
+      "endTime": "string (HH:mm)"
+    }
+  ]
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/bookings/user</code>
+              <code>GET /api/bookings/user</code>
               <p>دریافت لیست رزروهای فعال کاربر</p>
+              <div class="api-details">
+                <h4>پارامترهای Query:</h4>
+                <pre>
+userId: string (required)
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "bookings": [
+    {
+      "id": "string",
+      "podNumber": "string",
+      "startTime": "string",
+      "endTime": "string",
+      "status": "active|completed|cancelled"
+    }
+  ]
+}
+          </pre
+                >
+              </div>
             </div>
           </div>
 
           <h3>ثبت و تغییر اطلاعات (POST/PUT)</h3>
           <div class="api-docs">
             <div class="api-endpoint">
-              <code>/api/auth</code>
+              <code>POST /api/auth</code>
               <p>احراز هویت اولیه کاربر با شماره موبایل یا کد ملی</p>
+              <div class="api-details">
+                <h4>ورودی:</h4>
+                <pre>
+{
+  "identifier": "string", // شماره موبایل یا کد ملی
+  "type": "phone|nationalId"
+}
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "requestId": "string",
+  "expiresIn": "number" // seconds
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/auth/verify</code>
+              <code>POST /api/auth/verify</code>
               <p>تایید کد OTP و دریافت توکن دسترسی</p>
+              <div class="api-details">
+                <h4>ورودی:</h4>
+                <pre>
+{
+  "requestId": "string",
+  "code": "string"
+}
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "token": "string",
+  "expiresIn": "number" // seconds
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/bookings/create</code>
+              <code>POST /api/bookings/create</code>
               <p>ثبت درخواست رزرو جدید</p>
+              <div class="api-details">
+                <h4>ورودی:</h4>
+                <pre>
+{
+  "podId": "string",
+  "startTime": "string",
+  "duration": "number", // hours
+  "userId": "string"
+}
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "bookingId": "string",
+  "amount": "number",
+  "expiresAt": "string"
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/bookings/cancel</code>
+              <code>POST /api/bookings/cancel</code>
               <p>لغو رزرو موجود</p>
+              <div class="api-details">
+                <h4>ورودی:</h4>
+                <pre>
+{
+  "bookingId": "string",
+  "reason": "string"
+}
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "success": "boolean",
+  "refundAmount": "number" // مبلغ قابل استرداد
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/bookings/modify</code>
-              <p>تغییر در زمان یا مدت رزرو</p>
-            </div>
-            <div class="api-endpoint">
-              <code>/api/payments/init</code>
+              <code>POST /api/payments/init</code>
               <p>شروع فرآیند پرداخت و دریافت لینک درگاه</p>
+              <div class="api-details">
+                <h4>ورودی:</h4>
+                <pre>
+{
+  "bookingId": "string",
+  "paymentMethod": "online|pos|qr"
+}
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "paymentId": "string",
+  "paymentUrl": "string",
+  "amount": "number",
+  "expiresAt": "string"
+}
+          </pre
+                >
+              </div>
             </div>
+
             <div class="api-endpoint">
-              <code>/api/payments/verify</code>
+              <code>POST /api/payments/verify</code>
               <p>تایید پرداخت و فعال‌سازی رزرو</p>
+              <div class="api-details">
+                <h4>ورودی:</h4>
+                <pre>
+{
+  "paymentId": "string",
+  "transactionId": "string"
+}
+          </pre
+                >
+                <h4>خروجی:</h4>
+                <pre>
+{
+  "success": "boolean",
+  "accessCode": "string",
+  "bookingDetails": {
+    "podNumber": "string",
+    "location": "string",
+    "startTime": "string",
+    "endTime": "string"
+  }
+}
+          </pre
+                >
+              </div>
             </div>
           </div>
         </div>
