@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Enhancements for Order Reports</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        color: #333;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #2c3e50;
+      }
+      h1 {
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+      h2 {
+        margin-top: 30px;
+        border-left: 4px solid #3498db;
+        padding-left: 10px;
+      }
+      code {
+        background-color: #f5f5f5;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+      pre {
+        background-color: #f8f8f8;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      .note {
+        background-color: #fffde7;
+        padding: 10px;
+        border-left: 4px solid #ffd600;
+        margin: 10px 0;
+      }
+      .interface {
+        background-color: #e3f2fd;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>API Enhancements for Order Reports</h1>
+
+    <h2>1. New Endpoint: Maximum Order Amount</h2>
+    <p>
+      Add a new endpoint to return the maximum order amount ever submitted for a
+      business:
+    </p>
+    <pre><code>function getMaxOrderAmount(ownerId: string): number {
+  return 98_000_000; // Example return value in Rials
+}</code></pre>
+
+    <h2>2. Enhanced Filtering for Order Endpoints</h2>
+    <p>Update the filtering mechanism for the following endpoints:</p>
+    <ul>
+      <li><code>/order/transaction</code></li>
+      <li><code>/order/group</code></li>
+      <li><code>/order/excel-transaction</code></li>
+      <li><code>/order/excel-group</code></li>
+    </ul>
+
+    <h3>Current vs. New Filtering Logic</h3>
+    <p><strong>Current:</strong></p>
+    <ul>
+      <li>All filters use the same join type (AND/OR) between them</li>
+    </ul>
+
+    <p><strong>New Requirements:</strong></p>
+    <ul>
+      <li>Support for grouped OR conditions within AND/OR joins</li>
+      <li>
+        Multiple selections for:
+        <ul>
+          <li><code>saleChannelIds</code></li>
+          <li><code>itemIds</code></li>
+          <li><code>branchIds</code></li>
+          <li><code>paymentTypes</code></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Proposed Filter Structure</h3>
+    <div class="interface">
+      <pre><code>interface FilterGroup {
+  field: string; // e.g., "saleChannelId", "itemId", "branchId"
+  values: string[]; // Array of values to match with OR logic
+  operator: "In"; // Default operator for multiple values
+  // !!NOTE: Currently there is an operator called Split for TagIds.
+  // Although I think its broken or the functionality is different from what I expect.
+  // Keep this in mind to prevent extra work and if Split operator is enough for this, just tell me.
+}
+
+interface FilterRequest {
+  groups: FilterGroup[];
+  joinType: "AND" | "OR"; // How the groups combine with each other
+}</code></pre>
+    </div>
+
+    <h3>Examples</h3>
+    <p>
+      1. Find transactions on saleChannelId1 OR saleChannelId2 that contain
+      itemId3 OR itemId4:
+    </p>
+    <pre><code>{
+  "groups": [
+    {
+      "field": "saleChannelId",
+      "values": ["saleChannelId1", "saleChannelId2"],
+      "operator": "In"
+    },
+    {
+      "field": "itemId",
+      "values": ["itemId3", "itemId4"],
+      "operator": "In"
+    }
+  ],
+  "joinType": "AND"
+}</code></pre>
+
+    <p>2. Find transactions on branchId1 OR containing itemId5 OR itemId6:</p>
+    <pre><code>{
+  "groups": [
+    {
+      "field": "branchId",
+      "values": ["branchId1"],
+      "operator": "In"
+    },
+    {
+      "field": "itemId",
+      "values": ["itemId5", "itemId6"],
+      "operator": "In"
+    }
+  ],
+  "joinType": "OR"
+}</code></pre>
+
+    <h2>3. Add Total Sold Items Count to Transaction Results</h2>
+    <p>
+      For <code>/order/transactions</code> endpoint, add a new field to the
+      response:
+    </p>
+    <div class="interface">
+      <pre><code>interface TransactionSummary {
+  // Existing fields
+  totalOrders: number; // Count of orders
+  totalSum: number; // Sum of order amounts
+
+  // New field
+  totalSoldItems: number; // Sum of all individual items in all baskets
+}</code></pre>
+    </div>
+
+    <h2>4. Add Sold Items Count to Group Results</h2>
+    <p>
+      For <code>/order/group</code> endpoint with
+      <code>groupType: 7</code> (daily, timing mode: 2), add a new field to each
+      day's data:
+    </p>
+    <div class="interface">
+      <pre><code>interface DailyGroupData {
+  // Existing fields
+  count: number; // Count of orders for this day
+  sum: number; // Sum of order amounts for this day
+
+  // New field
+  soldItemsCount: number; // Sum of all individual items in all baskets for this day
+}</code></pre>
+    </div>
+
+    <h2>Implementation Notes</h2>
+    <ol>
+      <li>
+        For calculating <code>totalSoldItems</code> and
+        <code>soldItemsCount</code>, you'll need to sum the quantities of all
+        items in the basket arrays across all matching orders.
+      </li>
+    </ol>
+  </body>
+</html>
