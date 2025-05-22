@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reporting v2 Requirements</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 40px auto;
+        max-width: 800px;
+        padding: 0 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+      h2 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .group-type {
+        color: #7f8c8d;
+        font-size: 0.9em;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      .note {
+        background-color: #fff3cd;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Reporting v2 Requirements</h1>
+
+      <div class="note">
+        <strong>Group Types Reference:</strong>
+        <ul>
+          <li>Group Type 1: Campaigns reporting</li>
+          <li>Group Type 4: Sales Channels reporting</li>
+          <li>Group Type 7: Daily Transactions Total Sums</li>
+          <li>Group Type 10: Products (Items) reporting</li>
+        </ul>
+      </div>
+
+      <h2>
+        Daily Transactions Total Sums
+        <span class="group-type">(Group Type 7)</span>:
+      </h2>
+      <ul>
+        <li>
+          Return total submitted items count beside total transactions count at
+          root level
+        </li>
+        <li>
+          For objects inside items array, return the submitted items count for
+          each object (currently only have transactions count)
+        </li>
+      </ul>
+
+      <h2>New Endpoint:</h2>
+      <ul>
+        <li>
+          Create a simple endpoint to return the maximum transaction submitted
+          price
+        </li>
+      </ul>
+
+      <h2>Filtering:</h2>
+      <ul>
+        <li>
+          Add filters for all endpoints (transaction, group, and excel exports)
+          for:
+          <ul>
+            <li>Kiosks (multi-select by ID)</li>
+            <li>Branches (multi-select by ID)</li>
+            <li>Campaigns (multi-select by ID)</li>
+            <li>Items/Products (multi-select by ID)</li>
+          </ul>
+        </li>
+        <li>Add minimum and maximum price filters</li>
+      </ul>
+
+      <h2>
+        Products Reporting <span class="group-type">(Group Type 10)</span>:
+      </h2>
+      <ul>
+        <li>
+          For each object in items array:
+          <ul>
+            <li>Add product ID beside its key value</li>
+            <li>
+              Return count of sold items (if current count field means total
+              transactions, add new field for sold items count)
+            </li>
+          </ul>
+        </li>
+        <li>
+          At root level: Return total sold items beside current transactions
+          count
+        </li>
+      </ul>
+
+      <h2>
+        Campaigns Reporting <span class="group-type">(Group Type 1)</span>:
+      </h2>
+      <ul>
+        <li>Return campaign ID beside campaign name for each object</li>
+      </ul>
+
+      <h2>
+        Sales Channels Reporting <span class="group-type">(Group Type 4)</span>:
+      </h2>
+      <ul>
+        <li>Return sales channel ID along with other information</li>
+      </ul>
+
+      <h2>New Additions:</h2>
+      <ul>
+        <li>
+          Add new group types for date ranges:
+          <ul>
+            <li>Weekdays</li>
+            <li>Months</li>
+            <li>Day hours</li>
+          </ul>
+        </li>
+        <li>
+          Implement group type for visitor type according to Figma design,
+          including visitor type ID
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
